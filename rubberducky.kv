@@ -2,6 +2,7 @@
 
 Root:
     text_input: text_input
+    console_output: console_text
 
     BoxLayout:
         orientation: 'vertical'
@@ -15,6 +16,7 @@ Root:
                 background_color: (59, 59, 59, 1)
 
             RstDocument:
+                id: console_text
                 size_hint_x: .33
                 text: "Compilation results will be displayed here..."
 

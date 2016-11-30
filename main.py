@@ -22,6 +22,7 @@ class Root(FloatLayout):
     loadfile = ObjectProperty(None)
     savefile = ObjectProperty(None)
     text_input = ObjectProperty(None)
+    console_output = ObjectProperty(None)
 
     #TODO: Send text to compiler and execute
     def start_compile(self):
@@ -33,7 +34,7 @@ class Root(FloatLayout):
 
     def show_result(self):
         #TODO: Print compilation results here
-        pass
+        self.console_output.text = self.start_compile()
 
     def dismiss_popup(self):
         self._popup.dismiss()
