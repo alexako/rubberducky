@@ -8,6 +8,7 @@ from kivy.properties import ObjectProperty
 from kivy.factory import Factory
 import os
 
+
 class LoadDialog(FloatLayout):
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
