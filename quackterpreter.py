@@ -1,12 +1,9 @@
 #quack => keyword for print
 #squeeze => keyword for user input
 
-INTEGER = 'INTEGER'
-PLUS = 'PLUS'
-MINUS = 'MINUS'
-MUL = 'MUL'
-DIV = 'DIV'
-EOF = 'EOF'
+INTEGER, PLUS, MINUS, MUL, DIV, LPAREN, RPAREN, EOF = (
+    'INTEGER', 'PLUS', 'MINUS', 'MUL', 'DIV', '(', ')', 'EOF'
+)
 
 
 class Token(object):
@@ -79,6 +76,14 @@ class Lexer(object):
                 self.next_pos()
                 return Token(DIV, '/')
 
+            if self.current_char == '(':
+                self.next_pos()
+                return Token(LPAREN, '(')
+
+            if self.current_char == ')':
+                self.next_pos()
+                return Token(RPAREN, ')')
+
             self.error()
 
         return Token(EOF, None)
@@ -92,7 +97,6 @@ class Quackterpreter(object):
     def error(self):
         raise Exception("Invalid syntax found")
 
-
     def eat(self, token_type):
         """
             Checks if the current token type matches the passed token type
@@ -102,13 +106,17 @@ class Quackterpreter(object):
         else:
             self.error()
 
-
-
     def factor(self):
         """ Non-terminal method """
         token = self.current_token
-        self.eat(INTEGER)
-        return token.value
+        if token.type == INTEGER:
+            self.eat(INTEGER)
+            return token.value
+        elif token.type == LPAREN:
+            self.eat(LPAREN)
+            result = self.expr()
+            self.eat(RPAREN)
+            return result
 
     def term(self):
         """ Non-terminal method """
