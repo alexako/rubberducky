@@ -1,7 +1,12 @@
 #quack => keyword for print
 #squeeze => keyword for user input
 
-INTEGER, PLUS, MINUS, EOF = 'INTEGER', 'PLUS', 'MINUS' 'EOF'
+INTEGER = 'INTEGER'
+PLUS = 'PLUS'
+MINUS = 'MINUS'
+MUL = 'MUL'
+DIV = 'DIV'
+EOF = 'EOF'
 
 
 class Token(object):
@@ -10,12 +15,6 @@ class Token(object):
         self.value = value
 
     def __str_(self):
-        """String represnetation of the class instance.
-
-        Examples:
-            Token(INTEGER, 3)
-            Token(PLUS '+')
-        """
         return 'Token({type}, {value})'.format(
             type=self.type,
             value=repr(self.value)
@@ -24,16 +23,14 @@ class Token(object):
     def __repr__(self):
         return self.__str__()
 
-
-class Quackterpreter(object):
+class Lexer(object):
     def __init__(self, text):
         self.text = text
         self.pos = 0
-        self.current_token = None
         self.current_char = self.text[self.pos]
 
     def error(self):
-        raise Exception('Error parsing input')
+        raise Exception("Invalid syntax found")
 
     def next_pos(self):
         self.pos += 1
@@ -54,7 +51,9 @@ class Quackterpreter(object):
         return int(result)
 
     def get_next_token(self):
-        """Lexical Analyzer"""
+        """
+            Lexical Analyzer
+        """
 
         while self.current_char is not None:
             if self.current_char.isspace():
@@ -72,37 +71,74 @@ class Quackterpreter(object):
                 self.next_pos()
                 return Token(MINUS, '-')
 
+            if self.current_char == '*':
+                self.next_pos()
+                return Token(MUL, '*')
+
+            if self.current_char == '/':
+                self.next_pos()
+                return Token(DIV, '/')
+
             self.error()
 
         return Token(EOF, None)
 
+
+class Quackterpreter(object):
+    def __init__(self, lexer):
+        self.lexer = lexer
+        self.current_token = self.lexer.get_next_token()
+
+    def error(self):
+        raise Exception("Invalid syntax found")
+
+
     def eat(self, token_type):
+        """
+            Checks if the current token type matches the passed token type
+        """
         if self.current_token.type == token_type:
-            self.current_token = self.get_next_token()
+            self.current_token = self.lexer.get_next_token()
         else:
             self.error()
 
+
+
+    def factor(self):
+        """ Non-terminal method """
+        token = self.current_token
+        self.eat(INTEGER)
+        return token.value
+
+    def term(self):
+        """ Non-terminal method """
+        result = self.factor()
+        while self.current_token.type in (MUL, DIV):
+            token = self.current_token
+            if token.type == MUL:
+                self.eat(MUL)
+                result = result * self.factor()
+            elif token.type == DIV:
+                self.eat(DIV)
+                result = result / self.factor()
+
+        return result
+
     def expr(self):
-        """Parser"""
+        """
+            Parser
+            Non-terminal method
+        """
 
-        self.current_token = self.get_next_token()
-
-        left = self.current_token
-        self.eat(INTEGER)
-
-        op = self.current_token
-        if op.type == PLUS:
-            self.eat(PLUS)
-        if op.type == MINUS:
-            self.eat(MINUS)
-
-        right = self.current_token
-        self.eat(INTEGER)
-
-        if op.type == PLUS:
-            result = left.value + right.value
-        else if op.type == MINUS:
-            result = left.value - right.value
+        result = self.term()
+        while self.current_token.type in (PLUS, MINUS):
+            token = self.current_token
+            if token.type == PLUS:
+                self.eat(PLUS)
+                result = result + self.term()
+            elif token.type == MINUS:
+                self.eat(MINUS)
+                result = result - self.term()
 
         return result
 
@@ -114,7 +150,8 @@ def main():
             break
         if not text:
             continue
-        interpreter = Quackterpreter(text)
+        lexer = Lexer(text)
+        interpreter = Quackterpreter(lexer)
         result = interpreter.expr()
         print(result)
 
