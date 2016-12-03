@@ -164,6 +164,7 @@ def show_help():
     """
 
 def main():
+    output_line_counter = 0
     while True:
         try:
             text = raw_input('ducky>> ')
@@ -182,10 +183,12 @@ def main():
         lexer = Lexer(text)
         interpreter = Quackterpreter(lexer)
         result = interpreter.expr()
-        print(result)
+        output_line_counter += 1
+        print "output[%d]:\n %s" % (output_line_counter, result)
 
 if __name__ == '__main__':
     print "RubberDucky v1.0 [2016-12-3] - Alex Reyes"
     print "Type 'help' for more information"
+    print "-----------------------------------------"
 
     main()
