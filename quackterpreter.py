@@ -1,10 +1,16 @@
 #quack => keyword for print
 #squeeze => keyword for user input
 
+
+
+#
+# Lexer
+#
+
+#Token types
 INTEGER, PLUS, MINUS, MUL, DIV, LPAREN, RPAREN, EOF = (
     'INTEGER', 'PLUS', 'MINUS', 'MUL', 'DIV', '(', ')', 'EOF'
 )
-
 
 class Token(object):
     def __init__(self, type, value):
@@ -19,6 +25,7 @@ class Token(object):
 
     def __repr__(self):
         return self.__str__()
+
 
 class Lexer(object):
     def __init__(self, text):
@@ -88,8 +95,25 @@ class Lexer(object):
 
         return Token(EOF, None)
 
+#
+# Parser
+#
 
-class Quackterpreter(object):
+class AST(object):
+    pass
+
+class BinaryOper(AST):
+    def __init__(self, left, op, right):
+        self.left = left
+        self.token = self.op = op
+        self.right = right
+
+class Num(AST):
+    def __init__(self, token):
+        self.token = token
+        self.value = token.value
+
+class Parser(object):
     def __init__(self, lexer):
         self.lexer = lexer
         self.current_token = self.lexer.get_next_token()
@@ -111,26 +135,27 @@ class Quackterpreter(object):
         token = self.current_token
         if token.type == INTEGER:
             self.eat(INTEGER)
-            return token.value
+            return Num(token)
         elif token.type == LPAREN:
             self.eat(LPAREN)
-            result = self.expr()
+            node = self.expr()
             self.eat(RPAREN)
-            return result
+            return node
 
     def term(self):
         """ Non-terminal method """
-        result = self.factor()
+        node = self.factor()
         while self.current_token.type in (MUL, DIV):
             token = self.current_token
             if token.type == MUL:
                 self.eat(MUL)
-                result = result * self.factor()
             elif token.type == DIV:
                 self.eat(DIV)
-                result = result / self.factor()
 
-        return result
+            #TODO: Clean this up
+            node = BinaryOper(left=node, op=token, right=self.factor())
+
+        return node
 
     def expr(self):
         """
@@ -138,17 +163,53 @@ class Quackterpreter(object):
             Non-terminal method
         """
 
-        result = self.term()
+        node = self.term()
         while self.current_token.type in (PLUS, MINUS):
             token = self.current_token
             if token.type == PLUS:
                 self.eat(PLUS)
-                result = result + self.term()
             elif token.type == MINUS:
                 self.eat(MINUS)
-                result = result - self.term()
 
-        return result
+            node = BinaryOper(left=node, op=token, right=self.term())
+
+        return node
+
+    def parse(self):
+        return self.expr()
+
+#
+# Interpreter
+#
+class NodeVisitor(object):
+    def visit(self, node):
+        method_name = 'visit_' + type(node).__name__
+        visitor = getattr(self, method_name, self.generic_visit)
+        return visitor(node)
+
+    def generic_visit(self, node):
+        raise Exception('No visit_{} method'.format(type(node).__name__))
+
+class Quackterpreter(NodeVisitor):
+    def __init__(self, parser):
+        self.parser = parser
+
+    def visit_BinaryOper(self, node):
+        if node.op.type == PLUS:
+            return self.visit(node.left) + self.visit(node.right)
+        elif node.op.type == MINUS:
+            return self.visit(node.left) - self.visit(node.right)
+        elif node.op.type == MUL:
+            return self.visit(node.left) * self.visit(node.right)
+        elif node.op.type == DIV:
+            return self.visit(node.left) / self.visit(node.right)
+
+    def visit_Num(self, node):
+        return node.value
+
+    def quackterpret(self):
+        tree = self.parser.parse()
+        return self.visit(tree)
 
 def show_help():
     print """
@@ -163,26 +224,32 @@ def show_help():
     Example:
     """
 
+def goodbye_msg():
+    print "---------------------"
+    print "Bye, bye RubberDucky!"
+    print "---------------------"
+
 def main():
     output_line_counter = 0
     while True:
         try:
             text = raw_input('ducky>> ')
-            if text == "help":
-                show_help()
-                continue
-            if text == "exit" or text == "quit":
-                print "---------------------"
-                print "Bye, bye RubberDucky!"
-                print "---------------------"
-                exit()
         except EOFError:
             break
+
+        if text == "help":
+            show_help()
+            continue
+        if text == "exit" or text == "quit":
+            goodbye_msg()
+            exit()
         if not text:
             continue
+
         lexer = Lexer(text)
-        interpreter = Quackterpreter(lexer)
-        result = interpreter.expr()
+        parser = Parser(lexer)
+        quackterpreter = Quackterpreter(parser)
+        result = quackterpreter.quackterpret()
         output_line_counter += 1
         print "output[%d]:\n %s" % (output_line_counter, result)
 
