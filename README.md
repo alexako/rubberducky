@@ -1,5 +1,4 @@
 #RubberDucky
-A simple programming language
 
 "Sometimes, you just have to talk a problem out. I used to go to my boss and talk about something and he'd listen and then I'd just answer my own question and walk out without him saying a thing. I read about someone that put a rubber duck on their monitor so they could talk to it, so rubberducking is talking your way through a problem." - Jeff Atwood
 [Coding Horror](https://blog.codinghorror.com/rubber-duck-problem-solving/)
@@ -47,3 +46,16 @@ factor := INTEGER | LPAREN expr RPAREN
           | "a" | "b" | "c" | ... | "x" | "y" | "z"
 <number> := "0" | "1" | "2" | "3" | ... | "8" | "9"
 ```
+
+####Sources:
+Appel, Palsberg. "Moder Compiler Implementation in Java, Second Edition". 2002
+Crenshaw, Jack W. Ph.D. "Let's Build A Compiler". July 24 1988
+http://compilers.iecc.com/crenshaw/
+Mogensen, Torben. "Basics of Compiler Design". August 20, 2010
+http://www.diku.dk/~torbenm/Basics
+"Syntax: Grammars, Derivations, Parse Trees". September 1st, 2010
+http://www.idi.ntnu.no/emner/tdt4165/handouts/03-handouts.pdf
+Kivy API docs:
+https://kivy.org/docs/gettingstarted/intro.html
+Python Grammar specifications:
+https://docs.python.org/2/reference/grammar.html
