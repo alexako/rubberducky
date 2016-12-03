@@ -154,7 +154,7 @@ def show_help():
     print """
     Welcome to RubberDucky v1.0!
 
-    RubberDucky is a simple interpreter built in entirely in Python. The keywords
+    RubberDucky is a simple interpreter built entirely in Python. The keywords
     and syntax can be seen below. This is a project for CS145. Research
     resources, source code, and the README file can be seen in my repository on
     Github at https://github.com/alexako/rubberducky.
