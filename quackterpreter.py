@@ -266,11 +266,16 @@ def main():
         if not text:
             continue
 
-        lexer = Lexer(text)
-        parser = Parser(lexer)
-        quackterpreter = Quackterpreter(parser)
-        result = quackterpreter.quackterpret()
         output_line_counter += 1
+        try:
+            lexer = Lexer(text)
+            parser = Parser(lexer)
+            quackterpreter = Quackterpreter(parser)
+            result = quackterpreter.quackterpret()
+        except:
+            print "SyntaxError: Invalid syntax"
+            continue
+
         print "output[%d]:\n %s" % (output_line_counter, result)
 
 if __name__ == '__main__':
