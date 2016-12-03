@@ -2,7 +2,6 @@
 #squeeze => keyword for user input
 
 
-
 #
 # Lexer
 #
@@ -100,6 +99,7 @@ class Lexer(object):
 #
 
 class AST(object):
+    """ Abstract Syntax Tree Super class """
     pass
 
 class BinaryOper(AST):
@@ -107,6 +107,11 @@ class BinaryOper(AST):
         self.left = left
         self.token = self.op = op
         self.right = right
+
+class UnaryOper(AST):
+    def __init__(self, op, expr):
+        self.token = self.op = op
+        self.expr = expr
 
 class Num(AST):
     def __init__(self, token):
@@ -133,7 +138,15 @@ class Parser(object):
     def factor(self):
         """ Non-terminal method """
         token = self.current_token
-        if token.type == INTEGER:
+        if token.type == PLUS:
+            self.eat(PLUS)
+            node = UnaryOper(token, self.factor())
+            return node
+        elif token.type == MINUS:
+            self.eat(MINUS)
+            node = UnaryOper(token, self.factor())
+            return node
+        elif token.type == INTEGER:
             self.eat(INTEGER)
             return Num(token)
         elif token.type == LPAREN:
@@ -203,6 +216,13 @@ class Quackterpreter(NodeVisitor):
             return self.visit(node.left) * self.visit(node.right)
         elif node.op.type == DIV:
             return self.visit(node.left) / self.visit(node.right)
+
+    def visit_UnaryOper(self, node):
+        op = node.op.type
+        if op == PLUS:
+            return +self.visit(node.expr)
+        elif op == MINUS:
+            return -self.visit(node.expr)
 
     def visit_Num(self, node):
         return node.value
