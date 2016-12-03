@@ -150,10 +150,31 @@ class Quackterpreter(object):
 
         return result
 
+def show_help():
+    print """
+    Welcome to RubberDucky v1.0!
+
+    RubberDucky is a simple interpreter built in entirely in Python. The keywords
+    and syntax can be seen below. This is a project for CS145. Research
+    resources, source code, and the README file can be seen in my repository on
+    Github at https://github.com/alexako/rubberducky.
+
+    Syntax:
+    Example:
+    """
+
 def main():
     while True:
         try:
             text = raw_input('ducky>> ')
+            if text == "help":
+                show_help()
+                continue
+            if text == "exit" or text == "quit":
+                print "---------------------"
+                print "Bye, bye RubberDucky!"
+                print "---------------------"
+                exit()
         except EOFError:
             break
         if not text:
@@ -164,4 +185,7 @@ def main():
         print(result)
 
 if __name__ == '__main__':
+    print "RubberDucky v1.0 [2016-12-3] - Alex Reyes"
+    print "Type 'help' for more information"
+
     main()
