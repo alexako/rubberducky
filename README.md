@@ -8,36 +8,30 @@ CS145/AC2 - Alex Reyes
 ###Grammar Definition
 ```
 <stmt_list> := <statement> { <statement> }
-<statement> := <simple_stmt> | <compound_stmt> "."
+<statement> := <simple_stmt> | <compound_stmt> PERIOD
 
-<simple_stmt> := <vardecl> | <assign> | <print_stmt>
-<vardecl> := "var" <vardecl_list>
-          | "var" <vardecl_list> "=" <expr>
+<simple_stmt> := <vardecl> | <assign> | <print_stmt> | <list>
+<vardecl> := VAR <vardecl_list>
+          | VAR <vardecl_list> ASSIGN <expr>
 <vardecl_list> := <id> { "," <id> }
 <id> := <letter> { <idchar> }
-<idchar> := <letter> | <number> | "_"
-<assign> := <id> = <expr>
-<expr> := <id> ("+" | "-" | "*" | "/") <expr>
-        | '('<expr>')'
-        | <id>
-        | <bool>
-
-//Temp note
-expr := term ((PLUS | MIUS) term)*
-term := factor ((MUL | DIV) factor)*
-factor := (PLUS | MINUS) factor | INTEGER | LPAREN expr RPAREN
+<idchar> := <letter> | <number> | UNDERSCORE
+<assign> := <id> ASSIGN <expr>
+<expr> := term ((PLUS | MIUS) term)*
+<term> := factor ((MUL | DIV) factor)*
+<factor> := (PLUS | MINUS) factor | INTEGER | LPAREN expr RPAREN
 
 <compound_stmt> := <if_stmt> | <for_loop> | <while_loop>
-<if_stmt> := "if" '('<logic_expr>')' then '{'<stmt_list>'}'
-              { "else if" '('<logic_expr>')' "then" '{'<stmt_list>'}' }
-              { "else" '{'<stmt_list>'}' }
+<if_stmt> := "if" <logic_expr> then LBRACE <stmt_list> RBRACE
+              { "else if" <logic_expr> "then" LBRACE <stmt_list> RBRACE }
+              { "else" LBRACE <stmt_list> RBRACE }
 <logic_expr> := <expr> {<comp_op> (<expr> | <number>)}
 
-<list> := '['<expr> { "," <expr> } | "" ']'
-<for_loop> := "for" '('<id> "in" <list> ')' "do" '{'<stmt_list>'}'
-<while_loop> := "while" '('<logic_expr>')' "do" '{'<stmt_list>'}'
+<list> := LSQRBR <expr> { "," <expr> } | "" RSQRBR
+<for_loop> := "for" <id> "in" <list> "do" LBRACE <stmt_list> RBRACE
+<while_loop> := "while" <logic_expr> "do" LBRACE <stmt_list> RBRACE
 
-<print_stmt> := "quack"'('<expr>')'
+<print_stmt> := "quack" <expr>
 <break_stmt> := "break"
 
 <comp_op> := '<'|'>'|'=='|'>='|'<='|'!='|'in'|'not' 'in'|'is'|'is' 'not'
