@@ -25,7 +25,7 @@ CS145/AC2 - Alex Reyes
 //Temp note
 expr := term ((PLUS | MIUS) term)*
 term := factor ((MUL | DIV) factor)*
-factor := INTEGER | LPAREN expr RPAREN
+factor := (PLUS | MINUS) factor | INTEGER | LPAREN expr RPAREN
 
 <compound_stmt> := <if_stmt> | <for_loop> | <while_loop>
 <if_stmt> := "if" '('<logic_expr>')' then '{'<stmt_list>'}'
