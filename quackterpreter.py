@@ -250,7 +250,12 @@ def goodbye_msg():
     print "---------------------"
 
 def main():
+    print "RubberDucky v1.0 [2016-12-3] - Alex Reyes"
+    print "Type 'help' for more information"
+    print "-----------------------------------------"
+
     output_line_counter = 0
+
     while True:
         try:
             text = raw_input('ducky>> ')
@@ -279,8 +284,20 @@ def main():
         print "output[%d]:\n %s" % (output_line_counter, result)
 
 if __name__ == '__main__':
-    print "RubberDucky v1.0 [2016-12-3] - Alex Reyes"
-    print "Type 'help' for more information"
-    print "-----------------------------------------"
 
-    main()
+    import sys
+    if len(sys.argv) == 2:
+        with open(sys.argv[1], 'r') as f:
+            text = f.read()
+
+        try:
+            lexer = Lexer(text)
+            parser = Parser(lexer)
+            quackterpreter = Quackterpreter(parser)
+            result = quackterpreter.quackterpret()
+        except:
+            print "SyntaxError: Invalid syntax"
+            
+        print result
+    else:
+        main()
