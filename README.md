@@ -42,7 +42,7 @@ CS145/AC2 - Alex Reyes
 ```
 
 ####Sources:
-Appel, Palsberg. "Moder Compiler Implementation in Java, Second Edition". 2002
+Appel, Palsberg. "Modern Compiler Implementation in Java, Second Edition". 2002
 Crenshaw, Jack W. Ph.D. "Let's Build A Compiler". July 24 1988
 http://compilers.iecc.com/crenshaw/
 Mogensen, Torben. "Basics of Compiler Design". August 20, 2010
