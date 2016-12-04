@@ -614,20 +614,84 @@ class Quackterpreter(NodeVisitor):
             return ''
         return self.visit(tree)
 
+def show_help():
+    print """
+    Welcome to RubberDucky v1.0!
+
+    RubberDucky is a simple interpreter built entirely in Python. The keywords
+    and syntax can be seen below. This is a project for CS145. Research
+    resources, source code, and the README file can be seen in my repository on
+    Github at https://github.com/alexako/rubberducky.
+
+    Every program must begin with a header inclusive of the program name.
+        Example:
+            RUBBERDUCKY myDucky;
+
+    Variable declaration can be done outside of, but preceding the respective
+    block of code.
+        Single variable declaration example:
+            VAR num : INTEGER;
+
+        Multiple variable declaration example:
+            VAR
+                num     : INTEGER;
+                a, b, c : INTEGER;
+                y       : REAL;
+
+    Blocks of code are indicated with the keywords BEGIN and END. Block of code
+    can be nested, but must conclude with a semicolon. The outer most block
+    must end with a period.
+        The following are all valid blocks of code:
+            BEGIN
+                x := 3
+                BEGIN
+                    y := 8;
+                END;
+            END.
+
+    Printing to the console:
+    """
+
+def goodbye_msg():
+    print "---------------------"
+    print "Bye, bye RubberDucky!"
+    print "---------------------"
+
 def interactive():
+    print "RubberDucky v1.0 [2016-12-3] - Alex Reyes"
+    print "Type 'help' for more information"
+    print "-----------------------------------------"
+
+    output_line_counter = 0
 
     while True:
         try:
-            text = raw_input("ducky>> ")
+            text = raw_input('ducky>> ')
+        except EOFError:
+            break
+
+        if text == "help":
+            show_help()
+            continue
+        if text == "exit" or text == "quit":
+            goodbye_msg()
+            exit()
+        if not text:
+            continue
+
+        output_line_counter += 1
+
+        try:
             lexer = Lexer(text)
             parser = Parser(lexer)
             quackterpreter = Quackterpreter(parser)
             result = quackterpreter.quackterpret()
         except:
-            print "SyntaxError found"
+            print "SyntaxError: Invalid syntax"
+            print quackterpreter.GLOBAL_SCOPE.items()
             continue
 
-        print quackterpreter.GLOBAL_SCOPE
+        # print "output[%d]:\n %s" % (output_line_counter, result)
 
 def main(source):
 
