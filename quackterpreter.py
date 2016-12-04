@@ -265,9 +265,9 @@ class Program(AST):
 
 
 class Block(AST):
-    def __init__(self, declarations, compound_statement):
+    def __init__(self, declarations, compound_stmt):
         self.declarations = declarations
-        self.compound_statement = compound_statement
+        self.compound_stmt = compound_stmt
 
 
 class VarDecl(AST):
@@ -313,10 +313,10 @@ class Parser(object):
         return program_node
 
     def block(self):
-        """block : declarations compound_statement"""
+        """block : declarations compound_stmt"""
         declaration_nodes = self.declarations()
-        compound_statement_node = self.compound_statement()
-        node = Block(declaration_nodes, compound_statement_node)
+        compound_stmt_node = self.compound_stmt()
+        node = Block(declaration_nodes, compound_stmt_node)
         return node
 
     def declarations(self):
@@ -364,12 +364,12 @@ class Parser(object):
         node = Type(token)
         return node
 
-    def compound_statement(self):
+    def compound_stmt(self):
         """
-        compound_statement: BEGIN statement_list END
+        compound_stmt: BEGIN stmt_list END
         """
         self.eat(BEGIN)
-        nodes = self.statement_list()
+        nodes = self.stmt_list()
         self.eat(END)
 
         root = Compound()
@@ -378,38 +378,38 @@ class Parser(object):
 
         return root
 
-    def statement_list(self):
+    def stmt_list(self):
         """
-        statement_list : statement
-                       | statement SEMI statement_list
+        stmt_list : stmt
+                       | stmt SEMI stmt_list
         """
-        node = self.statement()
+        node = self.stmt()
 
         results = [node]
 
         while self.current_token.type == SEMI:
             self.eat(SEMI)
-            results.append(self.statement())
+            results.append(self.stmt())
 
         return results
 
-    def statement(self):
+    def stmt(self):
         """
-        statement : compound_statement
-                  | assignment_statement
+        stmt : compound_stmt
+                  | assignment_stmt
                   | empty
         """
         if self.current_token.type == BEGIN:
-            node = self.compound_statement()
+            node = self.compound_stmt()
         elif self.current_token.type == ID:
-            node = self.assignment_statement()
+            node = self.assignment_stmt()
         else:
             node = self.empty()
         return node
 
-    def assignment_statement(self):
+    def assignment_stmt(self):
         """
-        assignment_statement : variable ASSIGN expr
+        assignment_stmt : variable ASSIGN expr
         """
         left = self.variable()
         token = self.current_token
@@ -499,18 +499,18 @@ class Parser(object):
     def parse(self):
         """
         program : PROGRAM variable SEMI block DOT
-        block : declarations compound_statement
+        block : declarations compound_stmt
         declarations : VAR (variable_declaration SEMI)+
                      | empty
         variable_declaration : ID (COMMA ID)* COLON type_spec
         type_spec : INTEGER
-        compound_statement : BEGIN statement_list END
-        statement_list : statement
-                       | statement SEMI statement_list
-        statement : compound_statement
-                  | assignment_statement
+        compound_stmt : BEGIN stmt_list END
+        stmt_list : stmt
+                       | stmt SEMI stmt_list
+        stmt : compound_stmt
+                  | assignment_stmt
                   | empty
-        assignment_statement : variable ASSIGN expr
+        assignment_stmt : variable ASSIGN expr
         empty :
         expr : term ((PLUS | MINUS) term)*
         term : factor ((MUL | INTEGER_DIV | FLOAT_DIV) factor)*
@@ -557,7 +557,7 @@ class Quackterpreter(NodeVisitor):
     def visit_Block(self, node):
         for declaration in node.declarations:
             self.visit(declaration)
-        self.visit(node.compound_statement)
+        self.visit(node.compound_stmt)
 
     def visit_VarDecl(self, node):
         # Do nothing
@@ -615,42 +615,22 @@ class Quackterpreter(NodeVisitor):
         return self.visit(tree)
 
 def interactive():
-    print "RubberDucky v1.0 [2016-12-3] - Alex Reyes"
-    print "Type 'help' for more information"
-    print "-----------------------------------------"
-
-    output_line_counter = 0
 
     while True:
         try:
-            text = raw_input('ducky>> ')
-        except EOFError:
-            break
-
-        if text == "help":
-            show_help()
-            continue
-        if text == "exit" or text == "quit":
-            goodbye_msg()
-            exit()
-        if not text:
-            continue
-
-        output_line_counter += 1
-        try:
+            text = raw_input("ducky>> ")
             lexer = Lexer(text)
             parser = Parser(lexer)
             quackterpreter = Quackterpreter(parser)
             result = quackterpreter.quackterpret()
-            print(quackterpreter.GLOBAL_SCOPE)
         except:
-            print "SyntaxError: Invalid syntax"
+            print "SyntaxError found"
             continue
 
-        print "output[%d]:\n %s" % (output_line_counter, result)
-
+        print quackterpreter.GLOBAL_SCOPE
 
 def main(source):
+
     lexer = Lexer(source)
     parser = Parser(lexer)
     quackterpreter = Quackterpreter(parser)
@@ -664,7 +644,11 @@ if __name__ == '__main__':
 
     import sys
     if len(sys.argv) == 2:
-        text = open(sys.argv[1], 'r').read()
-        main(text)
+        if '.' in sys.argv[1] and sys.argv[1].split('.')[1] == 'ducky':
+            text = open(sys.argv[1], 'r').read()
+            main(text)
+        else:
+            print "IOError: Invalid file type"
+            print "\tExpected .ducky extension"
     else:
         interactive()
