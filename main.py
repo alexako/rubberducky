@@ -4,8 +4,10 @@ from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.popup import Popup
+from kivy.uix.label import Label
 from kivy.properties import ObjectProperty
 from kivy.factory import Factory
+import quackterpreter as Ducky
 import os
 
 
@@ -25,17 +27,27 @@ class Root(FloatLayout):
     text_input = ObjectProperty(None)
     console_output = ObjectProperty(None)
 
-    #TODO: Send text to compiler and execute
     def start_compile(self):
         to_compile = self.text_input.text
-        self._popup = Popup(title="Compiling",
+        try:
+            result = Ducky.quack(to_compile)
+            status = "Compilation successful!"
+            print "result type: ", type(result)
+        except Exception:
+            result = status = "Compilation failed..."
+
+        self._popup = Popup(title="Compilation Result",
+                            content=Label(text=status),
                             size_hint=(0.4, 0.4))
         self._popup.open()
-        return "Compiled successfully!"
+        return self.format_output(result)
 
     def show_result(self):
-        #TODO: Print compilation results here
         self.console_output.text = self.start_compile()
+
+    def format_output(self, result):
+        #TODO: Fix this. Prints in a single line
+        return  "\n".join(['='.join([x[0], str(x[1])]) for x in result])
 
     def dismiss_popup(self):
         self._popup.dismiss()

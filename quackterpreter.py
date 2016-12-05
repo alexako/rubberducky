@@ -658,10 +658,29 @@ def goodbye_msg():
     print "---------------------"
 
 def interactive():
+
+    def format(str):
+        temp = str.split(' ')
+        str = ' '.join(list(filter(lambda x: x not in RESERVED_KEYWORDS.keys(), temp)))
+        if not str.endswith(';'):
+            str += ';'
+
+        return "PROGRAM ducky; BEGIN " + str + " END."
+
+    def show_errors(str):
+        error = "SyntaxError: %s\n" % str
+        if ':=' not in str.split(' '):
+            error += "Expected an AssignmentOperator, ':='"
+        elif str.endswith(':='):
+            error += "Expected an NumericValue, INTEGER, or expression"
+
+        print error
+
     print "RubberDucky v1.0 [2016-12-3] - Alex Reyes"
     print "Type 'help' for more information"
     print "-----------------------------------------"
 
+    GLOBAL_SCOPE = {}
     output_line_counter = 0
 
     while True:
@@ -682,18 +701,18 @@ def interactive():
         output_line_counter += 1
 
         try:
-            lexer = Lexer(text)
+            ftext = format(text)
+            lexer = Lexer(ftext)
             parser = Parser(lexer)
             quackterpreter = Quackterpreter(parser)
-            result = quackterpreter.quackterpret()
+            quackterpreter.quackterpret()
+            for k, v in sorted(quackterpreter.GLOBAL_SCOPE.items()):
+                GLOBAL_SCOPE[k] = v
+                print('%s = %s' % (k, v))
         except:
-            print "SyntaxError: Invalid syntax"
-            print quackterpreter.GLOBAL_SCOPE.items()
-            continue
+            show_errors(text)
 
-        # print "output[%d]:\n %s" % (output_line_counter, result)
-
-def main(source):
+def quack(source):
 
     lexer = Lexer(source)
     parser = Parser(lexer)
@@ -703,6 +722,8 @@ def main(source):
     for k, v in sorted(quackterpreter.GLOBAL_SCOPE.items()):
         print('%s = %s' % (k, v))
 
+    return sorted(quackterpreter.GLOBAL_SCOPE.items())
+
 
 if __name__ == '__main__':
 
@@ -710,7 +731,7 @@ if __name__ == '__main__':
     if len(sys.argv) == 2:
         if '.' in sys.argv[1] and sys.argv[1].split('.')[1] == 'ducky':
             text = open(sys.argv[1], 'r').read()
-            main(text)
+            quack(text)
         else:
             print "IOError: Invalid file type"
             print "\tExpected .ducky extension"
