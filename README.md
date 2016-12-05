@@ -43,13 +43,27 @@ CS145/AC2 - Alex Reyes
 
 ####Sources:
 Appel, Palsberg. "Modern Compiler Implementation in Java, Second Edition". 2002
+
 Crenshaw, Jack W. Ph.D. "Let's Build A Compiler". July 24 1988
+
 http://compilers.iecc.com/crenshaw/
+
+
 Mogensen, Torben. "Basics of Compiler Design". August 20, 2010
+
 http://www.diku.dk/~torbenm/Basics
+
+
 "Syntax: Grammars, Derivations, Parse Trees". September 1st, 2010
+
 http://www.idi.ntnu.no/emner/tdt4165/handouts/03-handouts.pdf
+
+
 Kivy API docs:
+
 https://kivy.org/docs/gettingstarted/intro.html
+
+
 Python Grammar specifications:
+
 https://docs.python.org/2/reference/grammar.html
