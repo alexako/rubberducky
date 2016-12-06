@@ -1,9 +1,46 @@
 #RubberDucky
 
+RubberDucky is a dynamic, static typed programming language. It belongs to the procedural programming language paradigm. The user interface was built with a Python GUI framework called Kivy. Python must be installed in order to run.
+
+####To run:
+```
+#Navigate to project directory
+python main.py
+```
+####Compiler:
+```
+python quackterpreter.py example.ducky
+```
+
+####Interactive Interpreter:
+RubberDucky can act as an interactive interpreter. Simple execute the `quackterpreter.py` without passing any arguments.
+
 "Sometimes, you just have to talk a problem out. I used to go to my boss and talk about something and he'd listen and then I'd just answer my own question and walk out without him saying a thing. I read about someone that put a rubber duck on their monitor so they could talk to it, so rubberducking is talking your way through a problem." - Jeff Atwood
 [Coding Horror](https://blog.codinghorror.com/rubber-duck-problem-solving/)
 
 CS145/AC2 - Alex Reyes
+
+###Sample Code
+```Pascal
+PROGRAM Example;
+VAR
+   number     : INTEGER;
+   a, b, c, x : INTEGER;
+   y          : REAL;
+
+BEGIN {Example}
+   BEGIN
+      number := 2;
+      a := number;
+      b := 10 * a + 10 * number DIV 4;
+      c := a - -b
+   END;
+   x := 11;
+   y := 20 / 7 + 3.14;
+   { This is a comment. }
+
+END.  
+```
 
 ###Grammar Definition
 ```
@@ -40,6 +77,11 @@ CS145/AC2 - Alex Reyes
           | "a" | "b" | "c" | ... | "x" | "y" | "z"
 <number> := "0" | "1" | "2" | "3" | ... | "8" | "9"
 ```
+
+Keywords:   
+-`PROGRAM` - Indicates beginning of the program   
+-`BEGIN` - Indicates the beginning of a block   
+-`END` - Indicates the end of a block
 
 ####Sources:
 Appel, Palsberg. "Modern Compiler Implementation in Java, Second Edition". 2002
