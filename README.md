@@ -1,6 +1,6 @@
 #RubberDucky
 
-RubberDucky is a dynamic, static typed programming language. It belongs to the procedural programming language paradigm. The user interface was built with a Python GUI framework called Kivy. Python must be installed in order to run.
+RubberDucky is a simple dynamic, loosely-typed programming language. It belongs to the procedural programming language paradigm. The user interface was built with a Python GUI framework called Kivy. Python must be installed in order to run.
 
 ####To run:
 ```
@@ -47,7 +47,8 @@ END.
 <stmt_list> := <statement> { <statement> }
 <statement> := <simple_stmt> | <compound_stmt> PERIOD
 
-<simple_stmt> := <vardecl> | <assign> | <print_stmt> | <list>
+<simple_stmt> := <vardecl> 
+               | <assign> SEMI
 <vardecl> := VAR <vardecl_list>
           | VAR <vardecl_list> ASSIGN <expr>
 <vardecl_list> := <id> { "," <id> }
@@ -58,25 +59,13 @@ END.
 <term> := factor ((MUL | DIV) factor)*
 <factor> := (PLUS | MINUS) factor | INTEGER | LPAREN expr RPAREN
 
-<compound_stmt> := <if_stmt> | <for_loop> | <while_loop>
-<if_stmt> := "if" <logic_expr> then LBRACE <stmt_list> RBRACE
-              { "else if" <logic_expr> "then" LBRACE <stmt_list> RBRACE }
-              { "else" LBRACE <stmt_list> RBRACE }
-<logic_expr> := <expr> {<comp_op> (<expr> | <number>)}
-
-<list> := LSQRBR <expr> { "," <expr> } | "" RSQRBR
-<for_loop> := "for" <id> "in" <list> "do" LBRACE <stmt_list> RBRACE
-<while_loop> := "while" <logic_expr> "do" LBRACE <stmt_list> RBRACE
-
-<print_stmt> := "quack" <expr>
-<break_stmt> := "break"
-
-<comp_op> := '<'|'>'|'=='|'>='|'<='|'!='|'in'|'not' 'in'|'is'|'is' 'not'
-<bool> := "True" | "False"
 <letter> := "A" | "B" | "C" | ... | "X" | "Y" | "Z"
           | "a" | "b" | "c" | ... | "x" | "y" | "z"
 <number> := "0" | "1" | "2" | "3" | ... | "8" | "9"
 ```
+
+Syntax:  
+All programs must include a `PROGRAM` statement in the beginning declaring its name. All statements must end with a semicolon, `;` and placed within a block (i.e. `BEGIN statement; END`). Blocks can be nested, but the outer most block must end with a period. Variable declarations are optional.
 
 Keywords:   
 -`PROGRAM` - Indicates beginning of the program   
