@@ -4,7 +4,7 @@ RubberDucky is a simple dynamic, loosely-typed programming language. It belongs 
 
 
 CS145/AC2 - Alex Reyes  
-https://github.com/aexlako/rubberducky/  
+https://github.com/alexako/rubberducky/  
 
 
 ####To run:
