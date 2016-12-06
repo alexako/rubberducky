@@ -18,7 +18,8 @@ RubberDucky can act as an interactive interpreter. Simple execute the `quackterp
 "Sometimes, you just have to talk a problem out. I used to go to my boss and talk about something and he'd listen and then I'd just answer my own question and walk out without him saying a thing. I read about someone that put a rubber duck on their monitor so they could talk to it, so rubberducking is talking your way through a problem." - Jeff Atwood
 [Coding Horror](https://blog.codinghorror.com/rubber-duck-problem-solving/)
 
-CS145/AC2 - Alex Reyes
+CS145/AC2 - Alex Reyes  
+https://github.com/aexlako/rubberducky/
 
 ###Sample Code
 ```Pascal
