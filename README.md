@@ -71,6 +71,7 @@ Keywords:
 -`PROGRAM` - Indicates beginning of the program   
 -`BEGIN` - Indicates the beginning of a block   
 -`END` - Indicates the end of a block
+-`DIV` - Integer division
 
 ####Sources:
 Appel, Palsberg. "Modern Compiler Implementation in Java, Second Edition". 2002
